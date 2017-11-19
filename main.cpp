@@ -9,12 +9,11 @@
 
 // Defines
 #define     TXT_WIDTH   100
-//#define     TXT_HEIGHT  35
+#define     XY_FACTOR   2
 
 using namespace cv;
 using namespace std;
 
-void drawText(Mat & image);
 void do_lookup(Mat& src, const char* code, char* fn);
 void process_img(char* full_path, char * img_filename);
 
@@ -53,74 +52,39 @@ int main()
         return EXIT_FAILURE;
     }
 
-return 0;
-    //cout << image.size << endl ;
-    //imshow("Hello", image);
-
-
-
-    /*
-    VideoCapture capture;
-    capture.open(0);
-    if(capture.isOpened())
-    {
-        cout << "Capture is opened" << endl;
-        for(;;)
-        {
-            capture >> image;
-            if(image.empty())
-                break;
-            drawText(image);
-            imshow("Sample", image);
-            if(waitKey(10) >= 0)
-                break;
-        }
-    }
-    else
-    {
-        cout << "No capture" << endl;
-        image = Mat::zeros(480, 640, CV_8UC1);
-        drawText(image);
-        imshow("Sample", image);
-        waitKey(0);
-    }
-    */
     return 0;
-}
-
-void drawText(Mat & image)
-{
-    putText(image, "Hello OpenCV",
-            Point(20, 50),
-            FONT_HERSHEY_COMPLEX, 1, // font face and scale
-            Scalar(255, 255, 255), // white
-            1, LINE_AA); // line thickness and type
 }
 
 void process_img(char* full_path, char * img_filename)
 {
     Mat image;
     image = imread(full_path);
-    imshow("orig", image);
-    image.convertTo(image, -1, 1, 80);
-    imshow("satur", image);
+    //imshow("orig", image);
+    image.convertTo(image, -1, 1, 100);
+    //imshow("satur", image);
 
-
-    int txt_height = (image.size[0] * 100 / image.size[1])/2;
+    int txt_height = (image.size[0] * 100 / image.size[1])/XY_FACTOR;
     Size  sz = Size(TXT_WIDTH, txt_height);
 
-    //cout << sz << endl ;
-    resize(image, image, sz, 0, 0);
     cvtColor(image, image, CV_BGR2GRAY);
-    equalizeHist(image, image);
 
+    blur(image, image, Size(7,7) );
+
+    /*
+    // Checking results
+    image = image + edges;
+    imshow("edges", edges);
+    imshow("sum", image);
+    */
+
+    equalizeHist(image, image);
+    resize(image, image, sz, 0, 0);
+    //Canny( detected_edges, detected_edges, lowThreshold, lowThreshold*ratio, kernel_size );
 
     char outfilename[500] = {0};
     sprintf(outfilename, "/home/noureddine-as/CLionProjects/img2txt/cmake-build-debug/output/%s_out.txt", img_filename);
     do_lookup(image, "8?!:,. ", outfilename);
-//    do_lookup(image, "88000000005", outfilename);
 
-    //waitKey(0);
 }
 
 void do_lookup(Mat& src, const char* code, char* fn)
