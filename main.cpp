@@ -5,6 +5,7 @@
 #include <iostream>
 #include <fstream>
 #include <dirent.h>
+#include <math.h>
 
 // Defines
 #define     TXT_WIDTH   100
@@ -116,7 +117,9 @@ void process_img(char* full_path, char * img_filename)
 
     char outfilename[500] = {0};
     sprintf(outfilename, "/home/noureddine-as/CLionProjects/img2txt/cmake-build-debug/output/%s_out.txt", img_filename);
-    do_lookup(image, "880?!:,.", outfilename);
+    do_lookup(image, "8?!:,. ", outfilename);
+//    do_lookup(image, "88000000005", outfilename);
+
     //waitKey(0);
 }
 
@@ -124,28 +127,22 @@ void do_lookup(Mat& src, const char* code, char* fn)
 {
     ofstream fo;
     fo.open(fn);
-    //fo << "Writing this to a file.\n";
-    //myfile.close();
-    //Mat lookuptable(1, 256, CV_8S);
 
-    //Mat ret(src.size[0], src.size[1], CV_8S);
     uchar lookuptable[256] = {0};
-    for(int i=1; i<strlen(code); i++)
+    for(int i=0; i<strlen(code); i++)
     {
-        for(int j=(255/strlen(code))*(i-1); j<(255/strlen(code))*i; j++)
-        {
+        for(int j=(256/strlen(code))*i; j<MAX((256/strlen(code))*(i+1), 256); j++){
             lookuptable[j] = (uchar)code[i];
+            //cout << j << "\"" << lookuptable[j] << "\"" << endl;
         }
     }
-    //LUT(src, lookuptable, ret);
 
     MatIterator_<uchar> it, end;
     for(it=src.begin<uchar>(), end=src.end<uchar>(); it != end; ++it)
     {
-        //cout << (char)lookuptable[(*it)];
         fo << (char)lookuptable[(*it)];
 
-        if((it-src.begin<uchar>())%TXT_WIDTH == 0)
+        if((it!= src.begin<uchar>()) && ((it - src.begin<uchar>() +1)%TXT_WIDTH == 0))
             fo << "\n";
     }
     fo.close();
