@@ -1,4 +1,5 @@
-**img2txt**
+# **#CB**
+# img2txt
 A C++ app that magically draws your images with text.
 
 The program is applied on all images within the "/cmake-build-debug/images/" directory and the result is stored as text files under the directory "/cmake-build-debug/output/"
