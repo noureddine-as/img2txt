@@ -1,0 +1,3 @@
+/home/noureddine-as/CLionProjects/img2txt/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+/home/noureddine-as/CLionProjects/img2txt/cmake-build-debug/CMakeFiles/edit_cache.dir
+/home/noureddine-as/CLionProjects/img2txt/cmake-build-debug/CMakeFiles/img2txt.dir
